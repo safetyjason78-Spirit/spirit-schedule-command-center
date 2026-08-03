@@ -58,7 +58,7 @@
 
   <section class="panel" data-panel="transfer">
     <div class="section-head"><div><h2>Updates &amp; Data Transfer</h2><p class="hint">See what changed and move the complete scheduler setup between devices without storing employee information online.</p></div></div>
-    <div class="release-card"><div class="release-meta">Latest Update · August 3, 2026</div><h3>Device Transfer &amp; Scheduling Upgrades</h3><ul><li>Added validated backup export and import for moving all local scheduler data between devices.</li><li>Added saved weekly schedules and two-week print / PDF preparation.</li><li>Added distinct Arnold and Crystal City themes with store-specific titles.</li><li>Printed schedules now use first name and last initial while full names remain local.</li></ul></div>
+    <div class="release-card"><div class="release-meta">Latest Update &middot; August 3, 2026</div><h3>Default Store Managers</h3><ul><li>Arnold now starts with Jessica listed as Store Manager.</li><li>Crystal City now starts with Jason listed as Store Manager.</li><li>Existing untouched placeholders update automatically without overwriting manually edited employees.</li></ul></div>
     <div class="transfer-grid">
       <div class="transfer-card"><h3>Export Backup</h3><p class="hint">Download both stores, hours, employees, availability, current drafts, and saved weeks into one backup file.</p><button class="action primary" id="exportBackup">Download Backup File</button></div>
       <div class="transfer-card"><h3>Import Backup</h3><p class="hint">Choose a backup created by this app. The file is validated before you are asked to replace this device's data.</p><input id="importBackup" type="file" accept="application/json,.json"><button class="action secondary" id="importBackupButton">Validate &amp; Import</button></div>
@@ -76,8 +76,10 @@ const clone=x=>JSON.parse(JSON.stringify(x));
 const defaultAvail=()=>Object.fromEntries(DAYS.map(d=>[d,{available:true,start:BASE_HOURS[d][0],end:BASE_HOURS[d][1]}]));
 const newEmployee=(name='',role='Store Associate')=>({id:crypto.randomUUID(),name,role,minHours:0,maxHours:40,availability:defaultAvail()});
 const seedStore=(name,managerName)=>({name:name.toUpperCase(),hours:clone(BASE_HOURS),targetStaff:4,employees:[newEmployee(managerName,'Store Manager')],schedule:[],savedWeeks:[]});
-let state=JSON.parse(localStorage.getItem('spiritTwoStoreScheduler')||'null')||{currentStore:'arnold',week:'',stores:{arnold:seedStore('Arnold','Jess'),crystal:seedStore('Crystal City','Store Manager')}};
+let state=JSON.parse(localStorage.getItem('spiritTwoStoreScheduler')||'null')||{currentStore:'arnold',week:'',stores:{arnold:seedStore('Arnold','Jessica'),crystal:seedStore('Crystal City','Jason')}};
 Object.values(state.stores).forEach(s=>s.employees.forEach(e=>{if(e.role==='Sales Associate')e.role='Store Associate'}));
+const untouchedArnoldManager=state.stores.arnold.employees.find(e=>e.role==='Store Manager'&&e.name==='Jess');if(untouchedArnoldManager)untouchedArnoldManager.name='Jessica';
+const untouchedCrystalManager=state.stores.crystal.employees.find(e=>e.role==='Store Manager'&&e.name==='Store Manager');if(untouchedCrystalManager)untouchedCrystalManager.name='Jason';
 Object.values(state.stores).forEach(s=>s.name=s.name.toUpperCase());
 Object.values(state.stores).forEach(s=>{if(!Array.isArray(s.savedWeeks))s.savedWeeks=[]});
 let selectedEmployeeId=null;
