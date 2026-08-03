@@ -17,7 +17,10 @@ A private, browser-based scheduling assistant for the Spirit Halloween stores in
 
 Open `index.html` in a modern browser. The application is self-contained and does not require installation or a build step.
 
+## Live app
+
+The `main` branch deploys automatically through GitHub Pages. Every future push publishes the newest scheduler version.
+
 ## Data and privacy
 
 Employee and schedule information is stored only in the browser's local storage on the device being used. It is not committed to this repository.
-
